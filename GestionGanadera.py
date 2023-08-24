@@ -7,7 +7,6 @@ import sqlite3
 # Diccionarios con los tipo de valores de cada tabla
 
 #Hace una comparacion con la MainTable
-ListaDiccitionaries = ["Animales","Campo","Potrero","Parcela","Seguimiento"]
 
 Animales = {'FhaterCowId': 'Number',
 'MotherCowId': 'Number',
@@ -45,6 +44,14 @@ Seguimiento = {
     'Animal': 'Number',
     'BornState': 'Number' 
 }
+
+
+DictDiccitionaries = {"Animales":Animales,
+                       "Campo":Campo,
+                       "Potrero":Potrero,
+                       "Parcela":Parcela,
+                       "Seguimiento":Seguimiento}
+
 
 conector = sqlite3.connect("GestionGanadera.db")
 
@@ -107,8 +114,6 @@ def string(CadenaTexto):
         #Si el bucle es verdadero (Else ya que solo se pueden tomar 2 valores en un booleano) se vuelve a pedir una cadena de texto 
         else:
             CadenaTexto = input('Tiene que ingresar un texto sin numeros  > ')
-    
-
 
 
 #Seleccionamos y reconocemos las tablas que se creron
@@ -218,8 +223,19 @@ class ChargeState():
         nombres = cursor.fetchall()
         print('Campos de la tabla',cursor.fetchall())
         datos = []
+
+        TemplateVerification = {}
+
+
+        for i in DictDiccitionaries:
+            if i == self.table:
+                 
+
+
+        # if self.table in DictDiccitionaries:
+
         for i in nombres:
-            if "ID" in i[0]:
+            if "ID" == i[0].upper():
                 pass
             else:
                 datos.append(input("Ingrese el campo " + i[0] + ' > '))
@@ -481,8 +497,6 @@ if "4" in Option:
         Instance02 = DeleteState(MainTable)
         Instance03 = ReadState(MainTable)
         Instance03.ReadAll()
-
-        
 
         # .Instance02.
 
