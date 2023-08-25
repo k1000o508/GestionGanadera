@@ -1,4 +1,5 @@
-
+import time
+from datetime import *
 import sqlite3
 # import mysql.connector
 
@@ -42,7 +43,7 @@ Parcela = {
 
 Seguimiento = {
     'Animal': 'Number',
-    'BornState': 'Number' 
+    'BornState': 'Number'
 }
 
 
@@ -55,22 +56,72 @@ DictDiccitionaries = {"Animales":Animales,
 
 conector = sqlite3.connect("GestionGanadera.db")
 
-
 def val_range(maxim,minin):
-   while True:
-        x = int(input(" ▶ "))
+    while True:
+        x = str(input(" ▶ "))
 
-        if x >= maxim and x <= minin:            
-            return x
+        print(x)
+        print(x <= str(maxim) and x >= str(minin))
+
+        if int(x) <= int(maxim) and int(x) >= int(minin):
+            return str(x)
         else:
             print("Su valor tiene que estar entre",minin ,"y",maxim ,sep = " ")
+
+
+def ValidacionFecha():
+       
+    while True:
+        # try:
+            print("Ingresa una fecha en el formato MM(mes): ")
+            #Arreglar val_range 
+            fechaM = val_range(12,1)
+            datetime.strptime(str(fechaM),'%m')
+            print("Fecha válida")
+            break
+        # except ValueError:
+            # print("Fecha inválida")
+
+    while True:
+        try:
+            fechaD = input("Ingresa una fecha en el formato DD(dia): ")
+            datetime.strptime(str(fechaD),'%d')
+            print("Fecha válida")
+            break
+        except ValueError:
+            print("Fecha inválida")
+    while True:
+        try:
+            #fecha = input("Ingresa una fecha en el formato YYYY-MM-DD: ")
+            print("Ingresa una fecha en el formato YYYY(año): ")
+            fechaY = val_range(2022,1900)
+            #datetime.strptime(fecha, '%Y-%m-%d')
+            datetime.strptime(str(fechaY), '%Y')
+            print("Fecha válida")
+            break
+        except ValueError:
+            print("Fecha inválida")
+
+    fecha = str(fechaY) + "-" + str(fechaM) + "-" + str(fechaD)
+    RevfechaY = reversed(fechaY)
+    RevfechaM = reversed(fechaM)
+    RevfechaD = reversed(fechaD)
+    fecha_val = "-".join([RevfechaY,RevfechaM,RevfechaD])
+    fecha_hoy = reversed(datetime.strptime(fechaY, '%Y') )+ reversed(datetime.strptime(fechaM,'%m')) + reversed(datetime.strptime(fechaD,'%d'))
+    print(fecha_val +"\n" + fecha_hoy)
+
+    reversed()
+
+    print(fecha)
+    return fecha
+
 
 
 #Validacion de datos(Agregar rangos de numeros y largo de los valores)
 
 #Esta definicion busca retornar valores validados un 100%
 def numeric(Numeric_string,Long_of_String,Max_number):
-    c = 0 
+    c = 0
     #El while true se encarga de forzar un valor apto para el codigo
     while True:
 
@@ -81,7 +132,7 @@ def numeric(Numeric_string,Long_of_String,Max_number):
         else:
             if c == 0:
                 Numeric_string = input("Ingrese una opcion valida > ")
-        
+
             if c == 1 and len(Numeric_string) >= 2:
                 Numeric_string = input("Ingrese una opcion valida de {} cifras > ".format(Long_of_String))
 
@@ -92,10 +143,10 @@ def numeric(Numeric_string,Long_of_String,Max_number):
                 Numeric_string = input("Ingrese una opcion valida de {} cifras entre {} y {} > ".format(Long_of_String,1,Max_number))
 
             if c > 3:
-                Numeric_string = input("!!BUSQUE AYUDA!!> ")                   
+                Numeric_string = input("!!BUSQUE AYUDA!!> ")
 
 
-        #Manera de ayudar al usuario , mientras mas se equivoca mas va a ayudarlo para poder cargar los datos necesarios 
+        #Manera de ayudar al usuario , mientras mas se equivoca mas va a ayudarlo para poder cargar los datos necesarios
         c += 1
 
 def string(CadenaTexto):
@@ -107,11 +158,11 @@ def string(CadenaTexto):
         for caracteres in CadenaTexto:
             if caracteres.isdigit():
                 Bucle = True
-        #Si el bucle es falso significa que nunca encontro un digito en la cadena de texto   
+        #Si el bucle es falso significa que nunca encontro un digito en la cadena de texto
         if Bucle == False:
             return CadenaTexto
-        
-        #Si el bucle es verdadero (Else ya que solo se pueden tomar 2 valores en un booleano) se vuelve a pedir una cadena de texto 
+
+        #Si el bucle es verdadero (Else ya que solo se pueden tomar 2 valores en un booleano) se vuelve a pedir una cadena de texto
         else:
             CadenaTexto = input('Tiene que ingresar un texto sin numeros  > ')
 
@@ -144,9 +195,9 @@ Genere VARCHAR(1) NOT NULL,
 Category NOT NULL,
 SubCategoty NOT NULL,
 BornWeight NOT NULL,
-LowedCow DATE NULL,  
+LowedCow DATE NULL,
 LowedCause VARCHAR(100) NULL,
-MensGain NOT NULL                                                    
+MensGain NOT NULL
 )""")
 
 conector.execute("""CREATE TABLE IF NOT EXISTS Campo (
@@ -180,7 +231,7 @@ conector.execute("""CREATE TABLE IF NOT EXISTS Seguimiento (
     BornState NUMBER(1)
 )""")
 
-#Tablas 
+#Tablas
 #  Animales
 #  Campo
 #  Potrero
@@ -215,7 +266,7 @@ conector.execute("""CREATE TABLE IF NOT EXISTS Seguimiento (
 class ChargeState():
     def __init__(self,table):
         global nombres
-        self.table = table  
+        self.table = table
 
     def InputData(self):
         cursor = conector.cursor()
@@ -226,22 +277,30 @@ class ChargeState():
 
         TemplateVerification = {}
 
-
         for i in DictDiccitionaries:
             if i == self.table:
-                 
-
-
+                TemplateVerification = DictDiccitionaries[i]
         # if self.table in DictDiccitionaries:
 
         for i in nombres:
             if "ID" == i[0].upper():
                 pass
             else:
-                datos.append(input("Ingrese el campo " + i[0] + ' > '))
+                print("Tipo de variable ",TemplateVerification[i[0]])
+
+                if TemplateVerification[i[0]] == "Number":
+                    datos.append(numeric(input("Ingrese el campo " + i[0] + ' > '),2,70))
                 
+                elif TemplateVerification[i[0]] == "Date":
+                    print("Ingrese el campo " + i[0])
+                    datos.append(ValidacionFecha())
+                
+                elif TemplateVerification[i[0]] == "Text":
+                    datos.append(string(input("Ingrese el campo " + i[0] + ' > ')))
+
+
         cursor = conector.cursor()
-        
+
         # Adaptacion para sqlite (?,?,?,?,?)
 
         # ATENCION: NO EJECUTAR SIN VALIDAR LOS DATOS ANTERIORMENTE
@@ -259,7 +318,7 @@ class ChargeState():
         print("Value Inputs :",ValuesInputs)
 
         cursor.executemany("INSERT INTO "+ self.table +" VALUES (null," + ValuesInputs + ")",[datos,])
-        conector.commit()    
+        conector.commit()
 
 class ReadState():
     def __init__(self,table):
@@ -273,7 +332,7 @@ class ReadState():
             print(row[0])
 
     def ReadColumn(self):
-       
+
         #Arreglar Error del fetchall()
         c = conector.cursor()
         c.execute("SELECT * FROM " + self.table + "")
@@ -290,22 +349,22 @@ class ReadState():
         #     print(row)
 
         # c.close()
-        
+
 
 class UpdateState():
     # def __init__(self,table,column,modify,columnId,id):
-    #     self.table = table 
+    #     self.table = table
     #     self.column = column
-    #     self.id = id 
+    #     self.id = id
     #     self.columnId = columnId
-    #     self.modify = modify 
+    #     self.modify = modify
 
     def __init__(self,table):
-        self.table = table 
+        self.table = table
 
     def UpdateTable(self,column,modify,id):
         self.column = column #Columna que sera modificada
-        self.id = id #Id unico de cada instancia 
+        self.id = id #Id unico de cada instancia
         self.modify = modify #Dato guardado en una instancia anterior que sera modificada
 
         c = conector.cursor()
@@ -316,7 +375,7 @@ class UpdateState():
 
 class DeleteState():
     def __init__(self,table):
-        self.table = table        
+        self.table = table
 
     def DeleteTableColumn(self,id):
         self.id = id
@@ -341,7 +400,7 @@ class DeleteState():
 
 
 # Animal
-# Campo 
+# Campo
 # Potrero
 # Parcela
 # Seguimiento
@@ -358,7 +417,7 @@ Option = numeric(input("""Menu de opciones:
     03_Update
     04_Delete
 
-    > """),1,4) 
+    > """),1,4)
 
 #Create
 #______________________________________________________
@@ -396,7 +455,7 @@ if "2" in Option:
     # Instance = ReadState
 
     if "1" in ReadOption:
-        #Creamos una instancia para leer todos los campos de una tabla 
+        #Creamos una instancia para leer todos los campos de una tabla
         Instance = ReadState(MainTable)
         Instance.ReadAll()
 
@@ -408,7 +467,7 @@ if "2" in Option:
 
 #Buscar como encontrar el nombre de todas los campos de la DDBB
 if "3" in Option:
-    
+
     MainTable = SelectTable()
 
     #Extraemos los datos necesarios de la base de datos para poder realizar la actualizacion
@@ -431,9 +490,9 @@ if "3" in Option:
         if "Y" in Anser.upper():
             if ban == 1:
                 Anser = string(input('Desea seguir modificando la tabla? > '))
-    
+
             ban = 1
-            #Lista para guardar las columnas 
+            #Lista para guardar las columnas
             Columns = []
 
             #Enumerate es una funcioin que tira dos valores por indice(Indice y Valor)
@@ -457,7 +516,7 @@ if "3" in Option:
 
             ModIndice = numeric(input("Que indice unico quiere modificar ? "),2,len(a)-1)
 
-            #Esto es una variable auxiliar para poder mostrar informacion mas precisa al usuario final 
+            #Esto es una variable auxiliar para poder mostrar informacion mas precisa al usuario final
             InfoIndice = ''
 
             for indices in a:
@@ -479,19 +538,19 @@ if "3" in Option:
         if 'N' in Anser.upper():
             break
 
-            
+
 
 #Delete State Class
 if "4" in Option:
     MainTable = SelectTable()
 
     print("""1_Eliminar Tabla completa \n2_Eliminar registro por ID""")
-    
+
     OptionDelete = val_range(1,2)
-    
+
     if OptionDelete == 1:
         Instance01 = DeleteState(MainTable)
-        Instance01.DeleteTable() 
+        Instance01.DeleteTable()
 
     if OptionDelete == 2:
         Instance02 = DeleteState(MainTable)
@@ -539,5 +598,4 @@ if "4" in Option:
 # Calcular cuántos animales entran por parcela.
 #______________________________________________________
 
-# Atencion: No esta definido la capacidad de la parcelas pero el codigo va a suponer que estan perfectamente divididad para calcular en base a la capacidad del campo completo 
-
+# Atencion: No esta definido la capacidad de la parcelas pero el codigo va a suponer que estan perfectamente divididad para calcular en base a la capacidad del campo completo
