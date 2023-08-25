@@ -2,6 +2,6 @@
 Cliente:  Olivia Orrosco 
 Programador:  Camilo Sanchez
 
-#________________________________________
+
 GestionGanadera
 Trabajo para ingeniero agronomo
