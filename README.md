@@ -1,5 +1,5 @@
 # Proyecto I.I.C.O agosto 2023
-# Cliente Olivia Orrosco 
+Cliente Olivia Orrosco 
 # Programador Camilo Sanchez
 
 # GestionGanadera
