@@ -103,14 +103,12 @@ def ValidacionFecha():
             print("Fecha inválida")
 
     fecha = str(fechaY) + "-" + str(fechaM) + "-" + str(fechaD)
-    RevfechaY = reversed(fechaY)
-    RevfechaM = reversed(fechaM)
-    RevfechaD = reversed(fechaD)
-    fecha_val = "-".join([RevfechaY,RevfechaM,RevfechaD])
-    fecha_hoy = reversed(datetime.strptime(fechaY, '%Y') )+ reversed(datetime.strptime(fechaM,'%m')) + reversed(datetime.strptime(fechaD,'%d'))
-    print(fecha_val +"\n" + fecha_hoy)
-
-    reversed()
+    # RevfechaY = str(reversed(fechaY))
+    # RevfechaM = str(reversed(fechaM))
+    # RevfechaD = str(reversed(fechaD))
+    # fecha_val = "-".join([RevfechaY,RevfechaM,RevfechaD])
+    # fecha_hoy = str(reversed(str(datetime.strptime(fechaY, '%Y'))))+ str(reversed(str(datetime.strptime(fechaM,'%m')))) + str(reversed(str(datetime.strptime(fechaD,'%d'))))
+    # print(fecha_val +"\n" + fecha_hoy)
 
     print(fecha)
     return fecha
@@ -546,7 +544,7 @@ if "4" in Option:
 
     print("""1_Eliminar Tabla completa \n2_Eliminar registro por ID""")
 
-    OptionDelete = val_range(1,2)
+    OptionDelete = val_range(2,1)
 
     if OptionDelete == 1:
         Instance01 = DeleteState(MainTable)
