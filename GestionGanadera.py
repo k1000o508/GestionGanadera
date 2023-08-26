@@ -543,9 +543,9 @@ if "4" in Option:
     MainTable = SelectTable()
 
     print("""1_Eliminar Tabla completa \n2_Eliminar registro por ID""")
-
-    OptionDelete = val_range(2,1)
-
+    
+    OptionDelete = val_range(1,2)
+    
     if OptionDelete == 1:
         Instance01 = DeleteState(MainTable)
         Instance01.DeleteTable()
