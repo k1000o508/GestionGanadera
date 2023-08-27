@@ -1,6 +1,7 @@
 import time
 from datetime import *
 import sqlite3
+import tabulate 
 # import mysql.connector
 
 # Gestion Ganadera Olivia Orozco / Camilo Sanchez
@@ -273,6 +274,8 @@ class ChargeState():
         print('Campos de la tabla',cursor.fetchall())
         datos = []
 
+
+        #Coincidencias en el diccionario para poder identicar los valores
         TemplateVerification = {}
 
         for i in DictDiccitionaries:
@@ -281,6 +284,13 @@ class ChargeState():
         # if self.table in DictDiccitionaries:
 
         for i in nombres:
+            # if "ID" in i[0].upper():
+            #     c = conn.cursor()
+            #     c.execute("SELECT * FROM table WHERE column='value'")
+            #     rows = c.fetchall()
+            #     for row in rows:
+            #         print(row)
+
             if "ID" == i[0].upper():
                 pass
             else:
@@ -319,6 +329,7 @@ class ChargeState():
         conector.commit()
 
 class ReadState():
+
     def __init__(self,table):
         self.table = table
 
@@ -326,8 +337,17 @@ class ReadState():
         c = conector.cursor()
         c.execute("SELECT * FROM " + self.table + "")
         rows = c.fetchall()
-        for row in rows:
-            print(row[0])
+
+        #Coincidencias en el diccionario para poder identicar los valores
+        TemplateVerification = {}
+
+        for i in DictDiccitionaries:
+            if i == self.table:
+                TemplateVerification = DictDiccitionaries[i]
+
+        #Tabulate formate table 
+        tabu = tabulate.tabulate(rows,headers=TemplateVerification.keys(),tablefmt="fancy_grid")
+        print(tabu)
 
     def ReadColumn(self):
 
