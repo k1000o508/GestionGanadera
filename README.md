@@ -6,3 +6,5 @@ Programador:  Camilo Sanchez
 GestionGanadera
 
 Trabajo para ingeniero agronomo
+
+ATENCION: Para ejecutar el codigo hay que descargar las siguientes librerias ,"datetime","tabulate","sqlite3"
