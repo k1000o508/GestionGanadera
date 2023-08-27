@@ -346,18 +346,29 @@ class ReadState():
                 TemplateVerification = DictDiccitionaries[i]
 
         #Tabulate formate table 
-        tabu = tabulate.tabulate(rows,headers=TemplateVerification.keys(),tablefmt="fancy_grid")
+        tabu = tabulate.tabulate(rows,headers=TemplateVerification.keys(),tablefmt="fancy_grid",numalign="center",stralign="center")
         print(tabu)
 
     def ReadColumn(self):
-
-        #Arreglar Error del fetchall()
         c = conector.cursor()
         c.execute("SELECT * FROM " + self.table + "")
         rows = c.fetchall()
-        for row in rows:
-            print(row[0])
 
+        #Coincidencias en el diccionario para poder identicar los valores
+        TemplateVerification = {}
+
+        for i in DictDiccitionaries:
+            if i == self.table:
+                TemplateVerification = DictDiccitionaries[i]
+
+        IdOption = numeric(input("Registro especifico(ID) : "),1,len(rows))
+
+        #Arreglar Error del fetchall()
+        c = conector.cursor()
+        c.execute("SELECT * FROM " + self.table + " WHERE ID = '"+ IdOption +"'")
+        rows = c.fetchall()
+        tabu = tabulate.tabulate(rows,headers=TemplateVerification.keys(),tablefmt="fancy_grid",numalign="center",stralign="center")
+        print(tabu)
 
         #Arreglar Error del fetchall()
         # c = conector.cursor()
@@ -581,14 +592,11 @@ if "4" in Option:
 # Realizar un listado de animales.
 #______________________________________________________
 
-# cursor = conector.cursor()
-# cursor.execute("SELECT * FROM Animales")
-# rows = cursor.fetchall()
-# for row in rows:
-#     print(row)
 
 # Realizar un listado de bajas.
 #______________________________________________________
+
+
 
 # class Deleted():
 #     def __init__(self):
