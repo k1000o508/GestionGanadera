@@ -428,6 +428,31 @@ class DeleteState():
         c.close()
 
 
+class DeleteSqlite():
+    def __init__(self,table):
+        self.table = table 
+
+    def CloneTables(self):
+        #Conectamos y creamos la base de datps eliminada
+        conector_deleted = sqlite3.connect("GestionGanaderaDelete.db")
+        cursor_deleted = conector_deleted.cursor()
+        cursor_original = conector.cursor()
+
+        #Obtenemos la estructura de la tabla
+        cursor_original.execute("SELECT * FROM sqlite_master WHERE type='table' AND name = '{}'".format(self.table))
+        TableStucture = cursor_original.fetchone()[0]
+        print(TableStucture)
+
+        #Creamos la tabla en la base de datos
+            
+        #cursor_deleted.execute(TableStucture)
+        #conector_deleted.commit()
+
+
+Instance = DeleteSqlite('Animales')
+Instance.CloneTables()
+
+
 # Puntos a resolver :
 
 #CRUD de todas las tablas LISTO
@@ -591,6 +616,7 @@ if "4" in Option:
 
 # Realizar un listado de bajas. CREAR CLASE DELETE
 #______________________________________________________
+
 
 
 # Realizar un listado de animales por parcela SISTEMA DE PARCELAS (ID PRINCIPAL)
