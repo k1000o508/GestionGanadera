@@ -199,6 +199,7 @@ LowedCause VARCHAR(100) NULL,
 MensGain NOT NULL
 )""")
 
+# Componer IDS de campo/parcela/animal
 conector.execute("""CREATE TABLE IF NOT EXISTS Campo (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     HighCamp DATE,
@@ -427,15 +428,9 @@ class DeleteState():
         c.close()
 
 
+# Puntos a resolver :
 
-
-# Animal
-# Campo
-# Potrero
-# Parcela
-# Seguimiento
-
-#CRUD de todas las tablas
+#CRUD de todas las tablas LISTO
 #______________________________________________________
 
 
@@ -589,38 +584,28 @@ if "4" in Option:
 
         # .Instance02.
 
-# Realizar un listado de animales.
+# Realizar un listado de animales. LISTO
+#______________________________________________________
+
+# Resuelto el el read de toda la tabla Animales
+
+# Realizar un listado de bajas. CREAR CLASE DELETE
 #______________________________________________________
 
 
-# Realizar un listado de bajas.
+# Realizar un listado de animales por parcela SISTEMA DE PARCELAS (ID PRINCIPAL)
 #______________________________________________________
 
 
-
-# class Deleted():
-#     def __init__(self):
-#         pass
-
-# Realizar un listado de animales por parcela
+# Realizar un listado de animales por categoría SQLITE3 clasificacion por categoria / REALIZAR VALIDACION DE CATEGORIAS
 #______________________________________________________
-
-#Voy a realizar un buscador a partir del id de los animales
-
-# Realizar un listado de animales por categoría
-#______________________________________________________
-
-#Buscar como hacer consultas como BBDD para poder hacerlo de sqlite3
 
 # Realizar un listado de campos por propietario
 #______________________________________________________
 
 
-
 # Conocer la ubicación de cada animal.
 #______________________________________________________
-
-# A partir del id
 
 # Calcular cuántos animales entran por parcela.
 #______________________________________________________
