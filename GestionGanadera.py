@@ -167,16 +167,16 @@ def string(CadenaTexto):
 
 
 #Seleccionamos y reconocemos las tablas que se creron
-def SelectTable():
+def SelectTable(Mensage):
     cursor = conector.cursor()
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name!='sqlite_sequence';")
 
     tables = cursor.fetchall()
 
-    print('Que campo quiere cargar?')
+    print(Mensage)
 
     for i in range(len(tables)):
-        print(i+1,tables[i])
+        print(i+1,tables[i][0])
 
     Option = numeric(input("Ingrese una opcion(un numero) > "),1,len(tables))
 
@@ -427,7 +427,7 @@ class DeleteState():
 
         c.close()
 
-
+#Crear ordenes Sql en vez de una clase 
 class DeleteSqlite():
     def __init__(self,table):
         self.table = table 
@@ -475,7 +475,7 @@ Option = numeric(input("""Menu de opciones:
 
 if "1" in Option:
 
-    MainTable = SelectTable()
+    MainTable = SelectTable("Que datos desearia cargar?, elija su opcion")
 
     #Esta variable solo guarda la instancia, (No hay necesidad de que sea un diccionario)
     # Instance = {}
@@ -494,7 +494,7 @@ if "1" in Option:
 
 if "2" in Option:
 
-    MainTable = SelectTable()
+    MainTable = SelectTable("Que datos desearia consultar, elija su opcion")
 
 
     ReadOption = numeric(input("""Opciones:
@@ -515,19 +515,30 @@ if "2" in Option:
         Instance.ReadColumn()
 
 
+#Renovar modificación
 #Buscar como encontrar el nombre de todas los campos de la DDBB
 if "3" in Option:
 
-    MainTable = SelectTable()
+    MainTable = SelectTable("Que datos desearia modificar, elija su opcion?")
 
     #Extraemos los datos necesarios de la base de datos para poder realizar la actualizacion
     cursor = conector.cursor()
-    a = cursor.execute("PRAGMA table_info('"+ MainTable +"')").fetchall()
+    a = cursor.execute("PRAGMA table_info('"+ MainTable +"')").fetchall()    
     cursor.close()
 
-    for indice in a:
+    
+    #Coincidencias en el diccionario para poder identicar los valores
+    TemplateVerification = {}
 
-        print(indice)
+    for i in DictDiccitionaries:
+        if i == self.table:
+            TemplateVerification = DictDiccitionaries[i]
+
+
+
+    tabu = list(tabulate.tabulate(a,headers=Headers))
+
+    print(tabu)
 
     Anser = string(input('Desea modificar la tabla? > '))
 
@@ -592,11 +603,12 @@ if "3" in Option:
 
 #Delete State Class
 if "4" in Option:
-    MainTable = SelectTable()
 
-    print("""1_Eliminar Tabla completa \n2_Eliminar registro por ID""")
+    print("""1_Eliminar todos los datos \n2_Eliminar dato especifico""")
 
     OptionDelete = val_range(2,1)
+
+    MainTable = SelectTable("Que dato quiere eliminar, elija su opcion?")
 
     if OptionDelete == 1:
         Instance01 = DeleteState(MainTable)
