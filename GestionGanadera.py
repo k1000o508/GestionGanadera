@@ -1,14 +1,79 @@
-import time
-from datetime import *
-import sqlite3
-import tabulate 
-# import mysql.connector
+#_____________________________________________________________________Librerias_____________________________________________________________________
 
-# Gestion Ganadera Olivia Orozco / Camilo Sanchez
+#Maneja las pausas de tiempo
+import time as t
+
+#Maneja fechas y horas 
+from datetime import *
+
+#Maneja la BDD
+import sqlite3
+
+#Crear tablas agradables visualmente 
+import tabulate 
+
+#Limpiar la consola
+import os as os
+
+#libreria para crear barra de carga (puramente estetico)
+import tqdm
+
+#Salida de hiperTexto con arte ASCII code
+import pyfiglet
+
+#_____________________________________________________________________Librerias_____________________________________________________________________
+
+
+#Estilos disponibles
+# * **simple:** Este es el estilo de tabla por defecto. Las celdas están alineadas a la izquierda y no hay líneas de cuadrícula.
+# * **grid:** Este estilo de tabla añade líneas de cuadrícula a la tabla.
+# * **fancy_grid:** Este estilo de tabla añade líneas de cuadrícula y un borde a la tabla.
+# * **pipe:** Este estilo de tabla utiliza el carácter de tubería (|) para separar las celdas.
+# * **orgtbl:** Este estilo de tabla utiliza la sintaxis de Org-mode para crear tablas.
+# * **rst:** Este estilo de tabla utiliza la sintaxis de reStructuredText para crear tablas.
+# * **mediawiki:** Este estilo de tabla utiliza la sintaxis de MediaWiki para crear tablas.
+# * **html:** Este estilo de tabla utiliza la sintaxis HTML para crear tablas.
+# * **latex:** Este estilo de tabla utiliza la sintaxis LaTeX para crear tablas.
+
+#Tipo de estilo de los outputs (Se puede cambiar por el estilo deseado)
+fontStyle = "fancy_gr"
+
+#_____________________________________________________________________Simulacion de carga_____________________________________________________________________
+
+# Create an instance of the tqdm.tqdm class.
+pbar = tqdm.tqdm(range(0,100,5))
+
+# Iterate over the list of elements.
+for i in pbar:
+    
+    #limpiamos la terminal
+    os.system('cls')
+    
+    # Actualizacion de la barra de progreso.
+    pbar.update()
+
+    # Escribimos el estado del bucle
+    pbar.write(f"{i}")
+
+    t.sleep(0.15)
+
+os.system('cls')
+
+# Close the progress bar.
+pbar.close()
+
+#Nombre del programa con la ayuda de pyfiglet
+text = pyfiglet.print_figlet(text="Gestion Ganadera",
+                             colors="WHITE",
+                             font="roman")
+
+t.sleep(5)
+
+os.system("cls")
+#_____________________________________________________________________Simulacion de carga_____________________________________________________________________
+
 
 # Diccionarios con los tipo de valores de cada tabla
-
-#Hace una comparacion con la MainTable
 
 Animales = {'FhaterCowId': 'Number',
 'MotherCowId': 'Number',
@@ -175,8 +240,15 @@ def SelectTable(Mensage):
 
     print(Mensage)
 
+    #Diccionario para el tabulate
+    TemplateList = []
+
     for i in range(len(tables)):
-        print(i+1,tables[i][0])
+        TemplateList.append([i+1,tables[i][0]])
+
+    tabu = tabulate.tabulate(TemplateList,headers=["Opcion","Registros"],numalign="center")
+
+    print(tabu)
 
     Option = numeric(input("Ingrese una opcion(un numero) > "),1,len(tables))
 
@@ -272,7 +344,6 @@ class ChargeState():
         cursor = conector.cursor()
         cursor.execute("SELECT name FROM pragma_table_info('"+ self.table +"')")
         nombres = cursor.fetchall()
-        print('Campos de la tabla',cursor.fetchall())
         datos = []
 
 
@@ -295,8 +366,6 @@ class ChargeState():
             if "ID" == i[0].upper():
                 pass
             else:
-                print("Tipo de variable ",TemplateVerification[i[0]])
-
                 if TemplateVerification[i[0]] == "Number":
                     datos.append(numeric(input("Ingrese el campo " + i[0] + ' > '),2,70))
                 
@@ -347,7 +416,7 @@ class ReadState():
                 TemplateVerification = DictDiccitionaries[i]
 
         #Tabulate formate table 
-        tabu = tabulate.tabulate(rows,headers=TemplateVerification.keys(),tablefmt="fancy_grid",numalign="center",stralign="center")
+        tabu = tabulate.tabulate(rows,headers=TemplateVerification.keys(),tablefmt=fontStyle,numalign="center",stralign="center")
         print(tabu)
 
     def ReadColumn(self):
@@ -368,7 +437,7 @@ class ReadState():
         c = conector.cursor()
         c.execute("SELECT * FROM " + self.table + " WHERE ID = '"+ IdOption +"'")
         rows = c.fetchall()
-        tabu = tabulate.tabulate(rows,headers=TemplateVerification.keys(),tablefmt="fancy_grid",numalign="center",stralign="center")
+        tabu = tabulate.tabulate(rows,headers=TemplateVerification.keys(),tablefmt=fontStyle,numalign="center",stralign="center")
         print(tabu)
 
         #Arreglar Error del fetchall()
@@ -448,9 +517,8 @@ class DeleteSqlite():
         #cursor_deleted.execute(TableStucture)
         #conector_deleted.commit()
 
-
-Instance = DeleteSqlite('Animales')
-Instance.CloneTables()
+# Instance = DeleteSqlite('Animales')
+# Instance.CloneTables()
 
 
 # Puntos a resolver :
@@ -458,16 +526,17 @@ Instance.CloneTables()
 #CRUD de todas las tablas LISTO
 #______________________________________________________
 
-
+OptionList = [[1,"Cargar Datos"],[2,"Consultar Información"],[3,"Actualizar Datos"],[4,"Eliminar Datos"]]
 
 #Esto tiene que ser mas amigable para el usuario
-Option = numeric(input("""Menu de opciones:
-    01_Create
-    02_Read
-    03_Update
-    04_Delete
 
-    > """),1,4)
+tabu = tabulate.tabulate(OptionList,headers=["Opcion","Control de Datos"],numalign="center")
+
+print(tabu)
+
+Option = numeric(input("\n > "),1,4)
+
+os.system('cls')
 
 #Create
 #______________________________________________________
@@ -475,12 +544,12 @@ Option = numeric(input("""Menu de opciones:
 
 if "1" in Option:
 
-    MainTable = SelectTable("Que datos desearia cargar?, elija su opcion")
+    MainTable = SelectTable("Que datos desearia cargar?")
+
+    os.system('cls')
 
     #Esta variable solo guarda la instancia, (No hay necesidad de que sea un diccionario)
     # Instance = {}
-
-    print('Main table',MainTable)
 
     Instance = ChargeState(MainTable)
 
@@ -528,17 +597,17 @@ if "3" in Option:
 
     
     #Coincidencias en el diccionario para poder identicar los valores
-    TemplateVerification = {}
+    # TemplateVerification = {}
 
-    for i in DictDiccitionaries:
-        if i == self.table:
-            TemplateVerification = DictDiccitionaries[i]
+    # for i in DictDiccitionaries:
+    #     if i == MainTable:
+    #         TemplateVerification = DictDiccitionaries[i]
 
 
 
-    tabu = list(tabulate.tabulate(a,headers=Headers))
+    # tabu = list(tabulate.tabulate(a,headers=Headers))
 
-    print(tabu)
+    # print(tabu)
 
     Anser = string(input('Desea modificar la tabla? > '))
 
