@@ -36,40 +36,43 @@ import pyfiglet
 # * **latex:** Este estilo de tabla utiliza la sintaxis LaTeX para crear tablas.
 
 #Tipo de estilo de los outputs (Se puede cambiar por el estilo deseado)
-fontStyle = "fancy_gr"
+fontStyle = "fancy_grid"
 
 #_____________________________________________________________________Simulacion de carga_____________________________________________________________________
 
-# Create an instance of the tqdm.tqdm class.
-pbar = tqdm.tqdm(range(0,100,5))
+def carga():
+    # Create an instance of the tqdm.tqdm class.
+    pbar = tqdm.tqdm(range(0,100,5))
 
-# Iterate over the list of elements.
-for i in pbar:
-    
-    #limpiamos la terminal
+    # Iterate over the list of elements.
+    for i in pbar:
+        
+        #limpiamos la terminal
+        os.system('cls')
+        
+        # Actualizacion de la barra de progreso.
+        pbar.update()
+
+        # Escribimos el estado del bucle
+        pbar.write(f"{i}")
+
+        t.sleep(0.15)
+
     os.system('cls')
-    
-    # Actualizacion de la barra de progreso.
-    pbar.update()
 
-    # Escribimos el estado del bucle
-    pbar.write(f"{i}")
+    # Close the progress bar.
+    pbar.close()
 
-    t.sleep(0.15)
+    #Nombre del programa con la ayuda de pyfiglet
+    text = pyfiglet.print_figlet(text="Gestion Ganadera",
+                                colors="WHITE",
+                                font="roman")
 
-os.system('cls')
+    t.sleep(2)
 
-# Close the progress bar.
-pbar.close()
+    os.system("cls")
 
-#Nombre del programa con la ayuda de pyfiglet
-text = pyfiglet.print_figlet(text="Gestion Ganadera",
-                             colors="WHITE",
-                             font="roman")
-
-t.sleep(5)
-
-os.system("cls")
+carga()
 #_____________________________________________________________________Simulacion de carga_____________________________________________________________________
 
 
@@ -246,15 +249,19 @@ def SelectTable(Mensage):
     for i in range(len(tables)):
         TemplateList.append([i+1,tables[i][0]])
 
-    tabu = tabulate.tabulate(TemplateList,headers=["Opcion","Registros"],numalign="center")
+    tabu = tabulate.tabulate(TemplateList,headers=["Opcion","Registros"],numalign="center",tablefmt=fontStyle)
 
     print(tabu)
 
-    Option = numeric(input("Ingrese una opcion(un numero) > "),1,len(tables))
+    Option = numeric(input("Opcion > "),1,len(tables))
 
     MainTable = tables[int(Option)-1][0]
 
+    os.system('cls')
+
     return MainTable
+
+    
 
 
 #Creamos todas las tablas en el dispositivo del usuario
@@ -530,7 +537,7 @@ OptionList = [[1,"Cargar Datos"],[2,"Consultar Información"],[3,"Actualizar Dat
 
 #Esto tiene que ser mas amigable para el usuario
 
-tabu = tabulate.tabulate(OptionList,headers=["Opcion","Control de Datos"],numalign="center")
+tabu = tabulate.tabulate(OptionList,headers=["Opcion","Control de Datos"],numalign="center",tablefmt=fontStyle)
 
 print(tabu)
 
@@ -543,6 +550,8 @@ os.system('cls')
 
 
 if "1" in Option:
+
+    os.system('cls')
 
     MainTable = SelectTable("Que datos desearia cargar?")
 
@@ -562,6 +571,8 @@ if "1" in Option:
 
 
 if "2" in Option:
+
+    os.system('cls')
 
     MainTable = SelectTable("Que datos desearia consultar, elija su opcion")
 
@@ -588,6 +599,8 @@ if "2" in Option:
 #Buscar como encontrar el nombre de todas los campos de la DDBB
 if "3" in Option:
 
+    os.system('cls')
+
     MainTable = SelectTable("Que datos desearia modificar, elija su opcion?")
 
     #Extraemos los datos necesarios de la base de datos para poder realizar la actualizacion
@@ -609,7 +622,21 @@ if "3" in Option:
 
     # print(tabu)
 
-    Anser = string(input('Desea modificar la tabla? > '))
+    def sn(z,text):
+        
+        while True:
+            z = str(input( """{}:
+                -Si
+                -No 
+                ▶ """.format(text) ))
+            
+            if z.upper() == "SI" or z.upper() == "NO" or z.upper() == "S" or z.upper() == "N":
+                zup = z.upper()
+                return z
+            else:
+                print("Ingrese por respuesta un si o no")
+
+    Anser = string(sn('Desea modificar la tabla? (Y/N)> '))
 
     ban = 0
 
@@ -673,11 +700,15 @@ if "3" in Option:
 #Delete State Class
 if "4" in Option:
 
+    os.system('cls')
+
+    MainTable = SelectTable("Que dato quiere eliminar, elija su opcion?")
+
+    os.system('cls')
+
     print("""1_Eliminar todos los datos \n2_Eliminar dato especifico""")
 
     OptionDelete = val_range(2,1)
-
-    MainTable = SelectTable("Que dato quiere eliminar, elija su opcion?")
 
     if OptionDelete == 1:
         Instance01 = DeleteState(MainTable)
@@ -687,6 +718,9 @@ if "4" in Option:
         Instance02 = DeleteState(MainTable)
         Instance03 = ReadState(MainTable)
         Instance03.ReadAll()
+
+
+    carga()
 
         # .Instance02.
 
@@ -718,3 +752,6 @@ if "4" in Option:
 #______________________________________________________
 
 # Atencion: No esta definido la capacidad de la parcelas pero el codigo va a suponer que estan perfectamente divididad para calcular en base a la capacidad del campo completo
+
+#Creditos
+print("Programadores:Olivia Orrozco y Camilo Sanchez ©")
