@@ -40,6 +40,20 @@ fontStyle = "fancy_grid"
 
 #_____________________________________________________________________Simulacion de carga_____________________________________________________________________
 
+def sn(z):
+        
+    while True:
+
+        if z.upper() == "SI" or z.upper() == "NO" or z.upper() == "S" or z.upper() == "N":
+            zup = z.upper()
+            return zup[:1]
+        else:
+            z = str(input( """Opcion incorrecta:
+                Opciones:
+                -Si
+                -No 
+                ▶ """ ))
+            
 def carga():
     # Create an instance of the tqdm.tqdm class.
     pbar = tqdm.tqdm(range(0,100,5))
@@ -64,7 +78,7 @@ def carga():
     pbar.close()
 
     #Nombre del programa con la ayuda de pyfiglet
-    text = pyfiglet.print_figlet(text="Gestion Ganadera ©",
+    text = pyfiglet.print_figlet(text="Gestion Ganadera",
                                 colors="WHITE",
                                 font="roman")
 
@@ -206,11 +220,8 @@ def numeric(Numeric_string,Long_of_String,Max_number):
             if c == 1:
                 Numeric_string = input("Ingrese una opcion valida  entre {} y {} > ".format(1,Max_number))
 
-            if c > 1 and c <= 3:
-                Numeric_string = input("Ingrese una opcion valida de {} cifras entre {} y {} > ".format(Long_of_String,1,Max_number))
-
             if c > 3:
-                Numeric_string = input("!!BUSQUE AYUDA!!> ")
+                Numeric_string = input("Ingrese una opcion valida de {} cifras entre {} y {} > ".format(Long_of_String,1,Max_number))
 
 
         #Manera de ayudar al usuario , mientras mas se equivoca mas va a ayudarlo para poder cargar los datos necesarios
@@ -241,15 +252,29 @@ def SelectTable(Mensage):
 
     tables = cursor.fetchall()
 
+    TablasVacias=[]
+
+    #Bucle con Diccitionaries 
+    for i in DictDiccitionaries.keys():
+        c = conector.cursor()
+        c.execute("SELECT COUNT(*) FROM " + i + "")
+        rows = c.fetchone()
+        if rows[0] == 0:
+            TablasVacias.append("Sin datos")
+        else:
+            TablasVacias.append("Cargada")
+
+
     print(Mensage)
 
     #Diccionario para el tabulate
     TemplateList = []
 
     for i in range(len(tables)):
-        TemplateList.append([i+1,tables[i][0]])
+        TemplateList.append([i+1,tables[i][0],TablasVacias[i]])
 
-    tabu = tabulate.tabulate(TemplateList,headers=["Opcion","Registros"],numalign="center",tablefmt=fontStyle)
+
+    tabu = tabulate.tabulate(TemplateList,headers=["Opcion","Registros","Estado"],numalign="center",tablefmt=fontStyle)
 
     print(tabu)
 
@@ -261,20 +286,7 @@ def SelectTable(Mensage):
 
     return MainTable
 
-#Validamos una opcion por si o por no 
-def sn(z):
-    while True:
-        z = str(input( """Opciones:
-            -Si
-            -No 
-            ▶ """ ))
-         
-        if z.upper() == "SI" or  z.upper() == "S":
-            return "SI"
-        elif z.upper() == "NO" or z.upper() == "N":
-            return "NO"
-        else:
-            print("Opcion incorrecta : ")
+    
 
 
 #Creamos todas las tablas en el dispositivo del usuario
@@ -540,21 +552,16 @@ class DeleteSqlite():
 # Instance = DeleteSqlite('Animales')
 # Instance.CloneTables()
 
-Bucle = 0 
+c = 0 
 
-while True:
-
-    if Bucle > 0:
-        Resp = sn(input("Quiere seguir usando el menu?"))
-        if Resp == "NO":
-            os.system('cls')
+while True:    
+    if c != 0:
+        Resp= sn(input("Desea continuar?  > "))
+        if Resp.upper() == "N" or Resp.upper() == "NO":
             break
         else:
-            os.system('cls')
-
-            pass
-    Bucle += 1         
-
+            os.system("cls")
+    c += 1
     # Puntos a resolver :
 
     #CRUD de todas las tablas LISTO
@@ -564,7 +571,7 @@ while True:
 
     #Esto tiene que ser mas amigable para el usuario
 
-    tabu = tabulate.tabulate(OptionList,headers=["Opcion","Control de Datos"],numalign="center",tablefmt=fontStyle)
+    tabu = tabulate.tabulate(OptionList,headers=["Opcion","Menu"],numalign="center",tablefmt=fontStyle)
 
     print(tabu)
 
@@ -643,11 +650,13 @@ while True:
         #     if i == MainTable:
         #         TemplateVerification = DictDiccitionaries[i]
 
+
+
         # tabu = list(tabulate.tabulate(a,headers=Headers))
 
         # print(tabu)
 
-        Anser = string(sn('Desea modificar la tabla? (Y/N)> '))
+        Anser = sn(input('Desea modificar la tabla? (Y/N)> '))
 
         ban = 0
 
@@ -764,5 +773,14 @@ while True:
 
     # Atencion: No esta definido la capacidad de la parcelas pero el codigo va a suponer que estan perfectamente divididad para calcular en base a la capacidad del campo completo
 
-    #Creditos
-print("Programadores:Olivia Orrozco y Camilo Sanchez ©")
+    #Agradecimiento 
+
+    # text = pyfiglet.print_figlet(text="Programadores:Olivia Orrozco y Camilo Sanchez ",
+    #                             colors= "WHITE",
+    #                             font="digital")
+
+
+
+#Hacerlo mas conprensible los campos Father Cow, mother cow etc, 
+
+#Opcion para volver atras
