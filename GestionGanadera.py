@@ -64,7 +64,7 @@ def carga():
     pbar.close()
 
     #Nombre del programa con la ayuda de pyfiglet
-    text = pyfiglet.print_figlet(text="Gestion Ganadera",
+    text = pyfiglet.print_figlet(text="Gestion Ganadera ©",
                                 colors="WHITE",
                                 font="roman")
 
@@ -261,7 +261,20 @@ def SelectTable(Mensage):
 
     return MainTable
 
-    
+#Validamos una opcion por si o por no 
+def sn(z):
+    while True:
+        z = str(input( """Opciones:
+            -Si
+            -No 
+            ▶ """ ))
+         
+        if z.upper() == "SI" or  z.upper() == "S":
+            return "SI"
+        elif z.upper() == "NO" or z.upper() == "N":
+            return "NO"
+        else:
+            print("Opcion incorrecta : ")
 
 
 #Creamos todas las tablas en el dispositivo del usuario
@@ -527,231 +540,229 @@ class DeleteSqlite():
 # Instance = DeleteSqlite('Animales')
 # Instance.CloneTables()
 
+Bucle = 0 
 
-# Puntos a resolver :
+while True:
 
-#CRUD de todas las tablas LISTO
-#______________________________________________________
-
-OptionList = [[1,"Cargar Datos"],[2,"Consultar Información"],[3,"Actualizar Datos"],[4,"Eliminar Datos"]]
-
-#Esto tiene que ser mas amigable para el usuario
-
-tabu = tabulate.tabulate(OptionList,headers=["Opcion","Control de Datos"],numalign="center",tablefmt=fontStyle)
-
-print(tabu)
-
-Option = numeric(input("\n > "),1,4)
-
-os.system('cls')
-
-#Create
-#______________________________________________________
-
-
-if "1" in Option:
-
-    os.system('cls')
-
-    MainTable = SelectTable("Que datos desearia cargar?")
-
-    os.system('cls')
-
-    #Esta variable solo guarda la instancia, (No hay necesidad de que sea un diccionario)
-    # Instance = {}
-
-    Instance = ChargeState(MainTable)
-
-    Instance.InputData()
-
-#Como crear una funcion en la clase que pida propiedades de unicamente la funcion independientemente del constructor
-
-#Read
-#______________________________________________________
-
-
-if "2" in Option:
-
-    os.system('cls')
-
-    MainTable = SelectTable("Que datos desearia consultar, elija su opcion")
-
-
-    ReadOption = numeric(input("""Opciones:
-        01_Toda la base de """ + MainTable + """
-        02_Consulta especifica por columna
-         > """),1,2)
-
-    # Instance = ReadState
-
-    if "1" in ReadOption:
-        #Creamos una instancia para leer todos los campos de una tabla
-        Instance = ReadState(MainTable)
-        Instance.ReadAll()
-
-    if "2" in ReadOption:
-
-        Instance = ReadState(MainTable)
-        Instance.ReadColumn()
-
-
-#Renovar modificación
-#Buscar como encontrar el nombre de todas los campos de la DDBB
-if "3" in Option:
-
-    os.system('cls')
-
-    MainTable = SelectTable("Que datos desearia modificar, elija su opcion?")
-
-    #Extraemos los datos necesarios de la base de datos para poder realizar la actualizacion
-    cursor = conector.cursor()
-    a = cursor.execute("PRAGMA table_info('"+ MainTable +"')").fetchall()    
-    cursor.close()
-
-    
-    #Coincidencias en el diccionario para poder identicar los valores
-    # TemplateVerification = {}
-
-    # for i in DictDiccitionaries:
-    #     if i == MainTable:
-    #         TemplateVerification = DictDiccitionaries[i]
-
-
-
-    # tabu = list(tabulate.tabulate(a,headers=Headers))
-
-    # print(tabu)
-
-    def sn(z,text):
-        
-        while True:
-            z = str(input( """{}:
-                -Si
-                -No 
-                ▶ """.format(text) ))
-            
-            if z.upper() == "SI" or z.upper() == "NO" or z.upper() == "S" or z.upper() == "N":
-                zup = z.upper()
-                return z
-            else:
-                print("Ingrese por respuesta un si o no")
-
-    Anser = string(sn('Desea modificar la tabla? (Y/N)> '))
-
-    ban = 0
-
-    #Primero le preguntamos al usuario que parte de la tabla quiere modificar en el siguiente orden(1_Columna a modificar / 2_Modificacion / 3_Id unica)
-    while True:
-
-
-        if "Y" in Anser.upper():
-            if ban == 1:
-                Anser = string(input('Desea seguir modificando la tabla? > '))
-
-            ban = 1
-            #Lista para guardar las columnas
-            Columns = []
-
-            #Enumerate es una funcioin que tira dos valores por indice(Indice y Valor)
-            for indice,row in enumerate(a):
-                if not row[1] == 'ID':
-                    print(indice,row[1])
-                    Columns.append(row[1])
-            print('')
-            ModColumn = numeric(input("Que columna quiere modificar? > "),1,len(a)-1)
-
-            #Buscamos los valores cargados en la base de datos, por ahora 0
-
-            ReadInstance1 = ReadState(MainTable)
-            print("[++]Instancia ")
-            ReadInstance1.ReadAll()
-
-            print("Estos son los indices que tiene disponibles : \n")
-
-            for indice in a:
-                print("ID ",indice[0])
-
-            ModIndice = numeric(input("Que indice unico quiere modificar ? "),2,len(a)-1)
-
-            #Esto es una variable auxiliar para poder mostrar informacion mas precisa al usuario final
-            InfoIndice = ''
-
-            for indices in a:
-                if int(ModIndice) == int(indices[0]):
-                    InfoIndice = indices[int(ModColumn)]
-                    print(InfoIndice)
-                    print(indices)
-
-            Modify = string(input("Actualizacion de {}: ".format(InfoIndice)))
-
-            UpdateInstance1 = UpdateState(MainTable)
-            print("[++]Instancia ")
-            UpdateInstance1.UpdateTable(ModColumn,Modify,ModIndice)
-
-
-            cursor = conector.cursor()
-            a = cursor.execute("PRAGMA table_info('"+ MainTable +"')").fetchall()
-
-        if 'N' in Anser.upper():
+    if Bucle > 0:
+        Resp = sn(input("Quiere seguir usando el menu?"))
+        if Resp == "NO":
+            os.system('cls')
             break
+        else:
+            os.system('cls')
 
+            pass
+    Bucle += 1         
 
+    # Puntos a resolver :
 
-#Delete State Class
-if "4" in Option:
+    #CRUD de todas las tablas LISTO
+    #______________________________________________________
+
+    OptionList = [[1,"Cargar Datos"],[2,"Consultar Información"],[3,"Actualizar Datos"],[4,"Eliminar Datos"]]
+
+    #Esto tiene que ser mas amigable para el usuario
+
+    tabu = tabulate.tabulate(OptionList,headers=["Opcion","Control de Datos"],numalign="center",tablefmt=fontStyle)
+
+    print(tabu)
+
+    Option = numeric(input("\n > "),1,4)
 
     os.system('cls')
 
-    MainTable = SelectTable("Que dato quiere eliminar, elija su opcion?")
-
-    os.system('cls')
-
-    print("""1_Eliminar todos los datos \n2_Eliminar dato especifico""")
-
-    OptionDelete = val_range(2,1)
-
-    if OptionDelete == 1:
-        Instance01 = DeleteState(MainTable)
-        Instance01.DeleteTable()
-
-    if OptionDelete == 2:
-        Instance02 = DeleteState(MainTable)
-        Instance03 = ReadState(MainTable)
-        Instance03.ReadAll()
+    #Create
+    #______________________________________________________
 
 
-    carga()
+    if "1" in Option:
 
-        # .Instance02.
+        os.system('cls')
 
-# Realizar un listado de animales. LISTO
-#______________________________________________________
+        MainTable = SelectTable("Que datos desearia cargar?")
 
-# Resuelto el el read de toda la tabla Animales
+        os.system('cls')
 
-# Realizar un listado de bajas. CREAR CLASE DELETE
-#______________________________________________________
+        #Esta variable solo guarda la instancia, (No hay necesidad de que sea un diccionario)
+        # Instance = {}
 
+        Instance = ChargeState(MainTable)
 
+        Instance.InputData()
 
-# Realizar un listado de animales por parcela SISTEMA DE PARCELAS (ID PRINCIPAL)
-#______________________________________________________
+    #Como crear una funcion en la clase que pida propiedades de unicamente la funcion independientemente del constructor
 
-
-# Realizar un listado de animales por categoría SQLITE3 clasificacion por categoria / REALIZAR VALIDACION DE CATEGORIAS
-#______________________________________________________
-
-# Realizar un listado de campos por propietario
-#______________________________________________________
+    #Read
+    #______________________________________________________
 
 
-# Conocer la ubicación de cada animal.
-#______________________________________________________
+    if "2" in Option:
 
-# Calcular cuántos animales entran por parcela.
-#______________________________________________________
+        os.system('cls')
 
-# Atencion: No esta definido la capacidad de la parcelas pero el codigo va a suponer que estan perfectamente divididad para calcular en base a la capacidad del campo completo
+        MainTable = SelectTable("Que datos desearia consultar, elija su opcion")
 
-#Creditos
+
+        ReadOption = numeric(input("""Opciones:
+            01_Toda la base de """ + MainTable + """
+            02_Consulta especifica por columna
+            > """),1,2)
+
+        # Instance = ReadState
+
+        if "1" in ReadOption:
+            #Creamos una instancia para leer todos los campos de una tabla
+            Instance = ReadState(MainTable)
+            Instance.ReadAll()
+
+        if "2" in ReadOption:
+
+            Instance = ReadState(MainTable)
+            Instance.ReadColumn()
+
+
+    #Renovar modificación
+    #Buscar como encontrar el nombre de todas los campos de la DDBB
+    if "3" in Option:
+
+        os.system('cls')
+
+        MainTable = SelectTable("Que datos desearia modificar, elija su opcion?")
+
+        #Extraemos los datos necesarios de la base de datos para poder realizar la actualizacion
+        cursor = conector.cursor()
+        a = cursor.execute("PRAGMA table_info('"+ MainTable +"')").fetchall()    
+        cursor.close()
+
+        
+        #Coincidencias en el diccionario para poder identicar los valores
+        # TemplateVerification = {}
+
+        # for i in DictDiccitionaries:
+        #     if i == MainTable:
+        #         TemplateVerification = DictDiccitionaries[i]
+
+        # tabu = list(tabulate.tabulate(a,headers=Headers))
+
+        # print(tabu)
+
+        Anser = string(sn('Desea modificar la tabla? (Y/N)> '))
+
+        ban = 0
+
+        #Primero le preguntamos al usuario que parte de la tabla quiere modificar en el siguiente orden(1_Columna a modificar / 2_Modificacion / 3_Id unica)
+        while True:
+
+
+            if "Y" in Anser.upper():
+                if ban == 1:
+                    Anser = string(input('Desea seguir modificando la tabla? > '))
+
+                ban = 1
+                #Lista para guardar las columnas
+                Columns = []
+
+                #Enumerate es una funcioin que tira dos valores por indice(Indice y Valor)
+                for indice,row in enumerate(a):
+                    if not row[1] == 'ID':
+                        print(indice,row[1])
+                        Columns.append(row[1])
+                print('')
+                ModColumn = numeric(input("Que columna quiere modificar? > "),1,len(a)-1)
+
+                #Buscamos los valores cargados en la base de datos, por ahora 0
+
+                ReadInstance1 = ReadState(MainTable)
+                print("[++]Instancia ")
+                ReadInstance1.ReadAll()
+
+                print("Estos son los indices que tiene disponibles : \n")
+
+                for indice in a:
+                    print("ID ",indice[0])
+
+                ModIndice = numeric(input("Que indice unico quiere modificar ? "),2,len(a)-1)
+
+                #Esto es una variable auxiliar para poder mostrar informacion mas precisa al usuario final
+                InfoIndice = ''
+
+                for indices in a:
+                    if int(ModIndice) == int(indices[0]):
+                        InfoIndice = indices[int(ModColumn)]
+                        print(InfoIndice)
+                        print(indices)
+
+                Modify = string(input("Actualizacion de {}: ".format(InfoIndice)))
+
+                UpdateInstance1 = UpdateState(MainTable)
+                print("[++]Instancia ")
+                UpdateInstance1.UpdateTable(ModColumn,Modify,ModIndice)
+
+
+                cursor = conector.cursor()
+                a = cursor.execute("PRAGMA table_info('"+ MainTable +"')").fetchall()
+
+            if 'N' in Anser.upper():
+                break
+
+
+
+    #Delete State Class
+    if "4" in Option:
+
+        os.system('cls')
+
+        MainTable = SelectTable("Que dato quiere eliminar, elija su opcion?")
+
+        os.system('cls')
+
+        print("""1_Eliminar todos los datos \n2_Eliminar dato especifico""")
+
+        OptionDelete = val_range(2,1)
+
+        if OptionDelete == 1:
+            Instance01 = DeleteState(MainTable)
+            Instance01.DeleteTable()
+
+        if OptionDelete == 2:
+            Instance02 = DeleteState(MainTable)
+            Instance03 = ReadState(MainTable)
+            Instance03.ReadAll()
+
+
+        carga()
+
+            # .Instance02.
+
+    # Realizar un listado de animales. LISTO
+    #______________________________________________________
+
+    # Resuelto el el read de toda la tabla Animales
+
+    # Realizar un listado de bajas. CREAR CLASE DELETE
+    #______________________________________________________
+
+
+
+    # Realizar un listado de animales por parcela SISTEMA DE PARCELAS (ID PRINCIPAL)
+    #______________________________________________________
+
+
+    # Realizar un listado de animales por categoría SQLITE3 clasificacion por categoria / REALIZAR VALIDACION DE CATEGORIAS
+    #______________________________________________________
+
+    # Realizar un listado de campos por propietario
+    #______________________________________________________
+
+
+    # Conocer la ubicación de cada animal.
+    #______________________________________________________
+
+    # Calcular cuántos animales entran por parcela.
+    #______________________________________________________
+
+    # Atencion: No esta definido la capacidad de la parcelas pero el codigo va a suponer que estan perfectamente divididad para calcular en base a la capacidad del campo completo
+
+    #Creditos
 print("Programadores:Olivia Orrozco y Camilo Sanchez ©")
